@@ -23,9 +23,8 @@ html {
   font-size: 62.5%;
 }
 
-main {
-  position: relative;
-  width: 120rem;
+body {
+  width: 124rem;
   font-family: "Space Grotesk", sans-serif;
   margin: 0 auto;
 }
@@ -108,13 +107,12 @@ main {
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-/*   cursor: pointer; */
+  cursor: pointer;
 }
 
-/* .card:hover {
+.card:hover {
   transform: scale(1.05);
-} */
-
+}
 .card-thumbnail {
   z-index: -1;
   width: 100%;

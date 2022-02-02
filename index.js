@@ -4,7 +4,7 @@
 // CONSTANTS
 ///////////////////////////////////////////////////
 
-const IMAGE_URL = `https://image.tmdb.org/t/p/w1280`;
+const IMAGE_URL = `http://image.tmdb.org/t/p/w1280`;
 const API_KEY = `ac5515314d4b6d0d214f1e84bb085ea9`;
 const tagsEl = document.querySelector(`.tags`);
 const cardsEl = document.querySelector(`.cards`);
@@ -13,45 +13,10 @@ const cardsEl = document.querySelector(`.cards`);
 // FUNCTIONS
 ///////////////////////////////////////////////////
 
-// Rendering Data
-
-// const renderData = function (data) {
-//   data.forEach((element, i) => {
-//     const html = `
-//         <div class="card">
-//               <img
-//                 class="card-thumbnail"
-//                 src="${
-//                   !element.backdrop_path
-//                     ? "https://i.postimg.cc/pTsTsm2s/image-not-found-3.jpg"
-//                     : IMAGE_URL + element.backdrop_path
-//                 }"
-//                 alt="${element.title}"
-//               />
-//               <div class="card-content">
-//                 <p class="card-heading">${element.title} (${element.release_date
-//       .split(``)
-//       .splice(0, 4)
-//       .join(``)})</p>
-//                 <div class="card-holders">
-//                   <p class="vote"><i class="fas fa-star ${getClassByRate(
-//                     element.vote_average
-//                   )}"></i>&nbsp;&nbsp;${element.vote_average}</p>
-//                   <span class="vote-count">(${
-//                     element.vote_count
-//                   } ratings)</span>
-//                 </div>
-//               </div>
-//             </div>
-//         `;
-//     cardsEl.innerHTML += html;
-//   });
-// };
-
 const renderData = function (data) {
   for (let i = 0; i < 18; i++) {
     const html = `
-        <div class="card">
+        <div class="card" data-number="${i}">
               <img
                 class="card-thumbnail"
                 src="${
@@ -81,7 +46,35 @@ const renderData = function (data) {
   }
 };
 
+// Render Movie details
+
+// const renderMovieDetails = function () {
+//   const html = `
+//   <div class="overlay">
+
+//   </div>
+//   `;
+//   document.querySelector(`body`).insertAdjacentHTML(`afterbegin`, html);
+// };
+
+// Render Error
+
+const renderError = function () {
+  document.querySelector(`.render-error`).innerHTML = ``;
+  document.querySelector(`.loading`).style.display = `none`;
+
+  const html = `
+  <div class="centering render-error">
+  <h1>
+  😶 Something went wrong! Please, check your internet connection.
+  </h1>
+  </div>
+  `;
+  document.querySelector(`.render-error`).innerHTML += html;
+};
+
 // Get color by rating
+
 const getClassByRate = function (vote) {
   if (vote >= 8) return `orange`;
   if (vote >= 5) return `green`;
@@ -91,36 +84,24 @@ const getClassByRate = function (vote) {
 // Rendering data according to the tags clicked
 
 const renderAccordingToTag = async function (url) {
-  document.querySelector(`.loading`).style.display = `flex`;
-  document.querySelector(`.load-more`).style.display = `none`;
+  try {
+    document.querySelector(`.render-error`).innerHTML = ``;
+    document.querySelector(`.loading`).style.display = `flex`;
 
-  cardsEl.innerHTML = ``;
-  const res = await fetch(
-    `https://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=1`
-  );
-  const data = await res.json();
-  document.querySelector(`.loading`).style.display = `none`;
-  renderData(data.results);
-  document.querySelector(`.load-more`).style.display = `flex`;
-};
+    // document.querySelector(`.load-more`).style.display = `none`;
 
-const loadMore = async function (url) {
-  document.querySelector(`.loading-2`).style.display = `flex`;
-  document.querySelector(`.load-more`).style.display = `none`;
+    cardsEl.innerHTML = ``;
+    const res = await fetch(
+      `http://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=1`
+    );
+    const data = await res.json();
+    document.querySelector(`.loading`).style.display = `none`;
+    renderData(data.results);
 
-  const res = await fetch(
-    `https://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=2`
-  );
-  const res2 = await fetch(
-    `https://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=3`
-  );
-  const data = await res.json();
-  const data2 = await res2.json();
-  document.querySelector(`.load-more`).style.display = `none`;
-
-  renderData(data.results);
-  renderData(data2.results);
-  document.querySelector(`.loading-2`).style.display = `none`;
+    // document.querySelector(`.load-more`).style.display = `flex`;
+  } catch {
+    renderError();
+  }
 };
 
 // Toggling style of tags
@@ -132,13 +113,19 @@ const toggleTag = function (nameOfClass) {
   document.querySelector(nameOfClass).classList.add(`active`);
 };
 
+///////////////////////////////////////////////////
+// STATE
+///////////////////////////////////////////////////
+
+let urlEndpoint;
+
 // INITIAL STATE
 
 renderAccordingToTag(`/discover/movie?sort_by=popularity.desc`);
+
 ///////////////////////////////////////////////////
 // EVENT DELEGATION
 ///////////////////////////////////////////////////
-let urlEndpoint;
 
 tagsEl.addEventListener(`click`, function (e) {
   if (e.target.classList.contains(`trending`)) {
@@ -184,4 +171,66 @@ tagsEl.addEventListener(`click`, function (e) {
   }
 });
 
-console.log(urlEndpoint);
+// cardsEl.addEventListener(`click`, function () {
+//   renderMovieDetails();
+// });
+
+///////////////////////////////////////////////////
+// FROM PREVIOUS DRAFTS
+///////////////////////////////////////////////////
+
+// LOAD MORE FUNCTION
+
+// const loadMore = async function (url) {
+//   document.querySelector(`.loading-2`).style.display = `flex`;
+//   document.querySelector(`.load-more`).style.display = `none`;
+
+//   const res = await fetch(
+//     `http://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=2`
+//   );
+//   const res2 = await fetch(
+//     `http://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=3`
+//   );
+//   const data = await res.json();
+//   const data2 = await res2.json();
+//   document.querySelector(`.load-more`).style.display = `none`;
+
+//   renderData(data.results);
+//   renderData(data2.results);
+//   document.querySelector(`.loading-2`).style.display = `none`;
+// };
+
+// RENDERING DATA FUNCTION
+
+// const renderData = function (data) {
+//   data.forEach((element, i) => {
+//     const html = `
+//         <div class="card">
+//               <img
+//                 class="card-thumbnail"
+//                 src="${
+//                   !element.backdrop_path
+//                     ? "https://i.postimg.cc/pTsTsm2s/image-not-found-3.jpg"
+//                     : IMAGE_URL + element.backdrop_path
+//                 }"
+//                 alt="${element.title}"
+//               />
+//               <div class="card-content">
+//                 <p class="card-heading">${element.title} (${element.release_date
+//       .split(``)
+//       .splice(0, 4)
+//       .join(``)})</p>
+//                 <div class="card-holders">
+//                   <p class="vote"><i class="fas fa-star ${getClassByRate(
+//                     element.vote_average
+//                   )}"></i>&nbsp;&nbsp;${element.vote_average}</p>
+//                   <span class="vote-count">(${
+//                     element.vote_count
+//                   } ratings)</span>
+//                 </div>
+//               </div>
+//             </div>
+//         `;
+//     cardsEl.innerHTML += html;
+//   });
+// };

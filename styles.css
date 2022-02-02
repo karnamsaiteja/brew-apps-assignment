@@ -107,12 +107,12 @@ body {
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  cursor: pointer;
+/*   cursor: pointer; */
 }
 
-.card:hover {
+/* .card:hover {
   transform: scale(1.05);
-}
+} */
 .card-thumbnail {
   z-index: -1;
   width: 100%;

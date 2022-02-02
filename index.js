@@ -4,7 +4,7 @@
 // CONSTANTS
 ///////////////////////////////////////////////////
 
-const IMAGE_URL = `http://image.tmdb.org/t/p/w1280`;
+const IMAGE_URL = `https://image.tmdb.org/t/p/w1280`;
 const API_KEY = `ac5515314d4b6d0d214f1e84bb085ea9`;
 const tagsEl = document.querySelector(`.tags`);
 const cardsEl = document.querySelector(`.cards`);
@@ -92,7 +92,7 @@ const renderAccordingToTag = async function (url) {
 
     cardsEl.innerHTML = ``;
     const res = await fetch(
-      `http://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=1`
+      `https://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=1`
     );
     const data = await res.json();
     document.querySelector(`.loading`).style.display = `none`;
@@ -186,10 +186,10 @@ tagsEl.addEventListener(`click`, function (e) {
 //   document.querySelector(`.load-more`).style.display = `none`;
 
 //   const res = await fetch(
-//     `http://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=2`
+//     `https://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=2`
 //   );
 //   const res2 = await fetch(
-//     `http://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=3`
+//     `https://api.themoviedb.org/3${url}&api_key=${API_KEY}&page=3`
 //   );
 //   const data = await res.json();
 //   const data2 = await res2.json();
